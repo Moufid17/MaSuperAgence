@@ -5,19 +5,28 @@ namespace App\Entity;
 use App\Repository\PropertyRepository;
 use Doctrine\ORM\Mapping as ORM;
 
+use Cocur\Slugify\Slugify;
+use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Component\Validator\Constraints\Regex;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
+
+
 /**
  * @ORM\Entity(repositoryClass=PropertyRepository::class)
+ * @UniqueEntity("title")
  */
 class Property
 {
     const HEAT = [
-        0 =>'Electric',
-        1 =>'Gaz'
+        0 =>'Non installer',
+        1 =>'Electrique',
+        2 =>'Gaz'
     ];
 
     public  function __construct(){
         $this->created_at =new \DateTime();
     }
+    
     /**
      * @ORM\Id
      * @ORM\GeneratedValue
@@ -27,21 +36,28 @@ class Property
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Assert\NotBlank
      */
     private $title;
 
     /**
      * @ORM\Column(type="text", length=255, nullable=true)
+     * @Assert\NotBlank
      */
     private $description;
 
     /**
      * @ORM\Column(type="integer")
+     * @Assert\NotBlank
+     * @Assert\Range(
+     *  min = 10,
+     *  max = 400)
      */
     private $surface;
 
     /**
      * @ORM\Column(type="integer")
+     * @Assert\NotBlank
      */
     private $rooms;
 
@@ -77,6 +93,7 @@ class Property
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Assert\Regex("/^[0-9]{5}$/")
      */
     private $postal_code;
 
@@ -105,6 +122,11 @@ class Property
         $this->title = $title;
 
         return $this;
+    }
+
+    public function getSlug(): ?string
+    {
+        return (new Slugify())->slugify($this->title);
     }
 
     public function getDescription(): ?string
@@ -179,11 +201,19 @@ class Property
         return $this;
     }
 
+    public function getFormattedPrice(): string
+    {
+        return number_format($this->getPrice(), 0, '', ' ');
+    }
+
     public function getHeat(): ?int
     {
         return $this->heat;
     }
-
+    public function getHeatType(): ?string
+    {
+        return self::HEAT[$this->heat];
+    }
     public function setHeat(int $heat): self
     {
         $this->heat = $heat;
@@ -250,4 +280,5 @@ class Property
 
         return $this;
     }
+    
 }
