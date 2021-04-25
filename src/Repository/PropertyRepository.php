@@ -3,8 +3,10 @@
 namespace App\Repository;
 
 use App\Entity\Property;
+use App\Entity\FilterProperty;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
+use Doctrine\Common\Collections\ArrayCollection;
 
 /**
  * @method Property|null find($id, $lockMode = null, $lockVersion = null)
@@ -32,14 +34,51 @@ class PropertyRepository extends ServiceEntityRepository
     }
 
     /**
-     * @return Property[]
+     * @param FilterProperty
+     * @return Query
      */
-    public function  findAllVisible(): array
+    public function  findAllVisibleQuery(FilterProperty $filterproperty)
     {
-        return $this->findVisibleQuery()
-            ->getQuery()
-            ->getResult();
+        $query = $this->findVisibleQuery();
+
+        if($filterproperty->getPriceMax()){
+            $query = $query->andwhere('p.price <= :ppriceMax')
+                    ->setParameter('ppriceMax', $filterproperty->getPriceMax());
+        }
+
+        if($filterproperty->getSurfaceMin()){
+            $query = $query->andwhere('p.surface >= :psurfaceMin')
+                    ->setParameter('psurfaceMin', $filterproperty->getSurfaceMin());
+        }
+
+        if($filterproperty->getRoomsMin()){
+            $query = $query->andwhere('p.rooms >= :proomsMin')
+                    ->setParameter('proomsMin', $filterproperty->getRoomsMin());
+        }
+
+        if($filterproperty->getOptions()->count() > 0){
+            $k = 0;
+            foreach($filterproperty->getOptions() as $v){   
+                $k++;
+                $query = $query->andwhere(":poption$k MEMBER of p.options")
+                        ->setParameter("poption$k", $v);
+            }
+        }
+       
+        return $query->getQuery();
     }
+
+    // public function  findAllVisibleQuery()
+    // {
+    //     return $this->findVisibleQuery()
+    //         ->getQuery();
+    // }
+    private function findVisibleQuery()
+    {   
+        return $this->createQueryBuilder('p')
+            ->where('p.sold = false');
+    }
+
     //  /**
     //  * @return Property
     //  */
@@ -51,17 +90,7 @@ class PropertyRepository extends ServiceEntityRepository
     //         ->getQuery()
     //         ->getResult();
     // }
-
-    /**
-     * @return Doctrine\ORM\QueryBuilder
-     */
-    private function findVisibleQuery()
-    {
-        
-        return $this->createQueryBuilder('p')
-            ->andWhere('p.sold = false');
-    }
-   
+  
     // /**
     //  * @return Property[] Returns an array of Property objects
     //  */

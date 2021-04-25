@@ -28,12 +28,12 @@ class AdminPropertyController extends AbstractController{
     /**
      * @Route("/admin/", name="admin.property.index")
      */
-
     public function index()
     {
         $properties = $this->repository->findAll();
         return $this->render('admin/property/index.html.twig',compact('properties'));
     }
+
     /**
      * @Route("/admin/property/create",name="admin.property.new")
      */
@@ -96,6 +96,7 @@ class AdminPropertyController extends AbstractController{
         }
         return $this->redirectToRoute('admin.property.index');
     }
+
     private function getTokenValide(Property $property,Request $request){
         return $this->isCsrfTokenValid('delete' . $property->getId(), $request->get('_token'));
     }
