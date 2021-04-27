@@ -21,3 +21,8 @@ $request = Request::createFromGlobals();
 $response = $kernel->handle($request);
 $response->send();
 $kernel->terminate($request, $response);
+
+// if (true || in_array($this->getEnvironment(), ['dev', 'test'], true)) {
+//     $bundles[] = new Symfony\Bundle\DebugBundle\DebugBundle();
+//     $bundles[] = new Symfony\Bundle\WebProfilerBundle\WebProfilerBundle();
+//     $bundles[] = new Sensio\Bundle\DistributionBundle\SensioDistributionBundle();
