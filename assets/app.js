@@ -10,3 +10,21 @@ import './styles/app.css';
 
 // start the Stimulus application
 import './bootstrap';
+
+let $ = require('jquery');
+
+//select2
+require('select2');
+
+$('select').select2({
+    tags: true,
+});
+
+let $contactButton = $('#contactBtn');
+
+$('#contactBtn').on(
+    'click', function(){
+        $('#contactForm').slideDown();
+        $contactButton.slideUp();
+    }
+)

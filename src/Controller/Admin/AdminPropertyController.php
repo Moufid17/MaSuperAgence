@@ -10,6 +10,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\String\Slugger\SluggerInterface;
 
 class AdminPropertyController extends AbstractController{
     
@@ -64,13 +65,39 @@ class AdminPropertyController extends AbstractController{
      * @param Property $property
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function edit(Property $property,Request $request)
+    public function edit(Property $property,Request $request, SluggerInterface $slugger)
     {
         $form = $this->createForm(PropertyType::class,$property);
 
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+
+            //  /** @var UploadedFile $brochureFile */
+            // $imageFile = $form->get('imageFile')->getData();
+            //  // this condition is needed because the 'brochure' field is not required
+            // // so the PDF file must be processed only when a file is uploaded
+            // if($imageFile){
+            //     $originalFilename = pathinfo($imageFile->getClientOriginalName(), PATHINFO_FILENAME);
+
+            //      // this is needed to safely include the file name as part of the URL
+            //      $safeFilename = $slugger->slug($originalFilename);
+            //      $newFilename = $safeFilename.'-'.uniqid().'.'.$imageFile->guessExtension();
+ 
+            //      // Move the file to the directory where brochures are stored
+            //      try {
+            //         $imageFile->move(
+            //             $this->getParameter('fileImage_directory'),
+            //             $newFilename
+            //         );
+            //     } catch (FileException $e) {
+            //         // ... handle exception if something happens during file upload
+            //     }
+
+            //     // updates the 'brochureFilename' property to store the PDF file name
+            //     // instead of its contents
+            //     $property->setFilename($newFilename);
+            // }
             $this->em->flush();
             $this->addFlash('success', 'Modifier avec success!');
             return $this->redirectToRoute('admin.property.index');

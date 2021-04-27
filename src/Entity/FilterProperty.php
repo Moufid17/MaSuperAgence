@@ -38,9 +38,15 @@ class FilterProperty
      */
     private $options;
 
+    /**
+     * @var int|null
+     */
+    private $arrayresultsize;
+
     public function __construct()
     {
         $this->options = new ArrayCollection();
+        $this->arrayresultsize = 0;
     }
     
     public function getOptions(): ArrayCollection
@@ -99,4 +105,20 @@ class FilterProperty
 
         return $this;
     }
+
+    public function getArrayResultSize(): ?int
+    {
+        return $this->arrayresultsize;
+    }
+
+    public function setArrayResultSize(?Array $arrayresult): self
+    {
+        if($arrayresult != null){
+            foreach($arrayresult as $e) $this->arrayresultsize++;
+        }
+
+        return $this;
+    }
+
+
 }

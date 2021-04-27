@@ -45,10 +45,17 @@ Encore
     // enables hashed filenames (e.g. app.abc123.css)
     .enableVersioning(Encore.isProduction())
 
-    .configureBabel((config) => {
-        config.plugins.push('@babel/plugin-proposal-class-properties');
-    })
+    // .configureBabel((config) => {
+    //     config.plugins.push('@babel/plugin-proposal-class-properties');
+    // })
+    .configureBabel(function(babelConfig) {
+        // add additional presets
+        babelConfig.presets.push('@babel/preset-flow');
 
+        // no plugins are added by default, but you can add some
+        // babelConfig.plugins.push('styled-jsx/babel');
+    })
+    
     // enables @babel/preset-env polyfills
     .configureBabelPresetEnv((config) => {
         config.useBuiltIns = 'usage';
@@ -72,4 +79,11 @@ Encore
     //.autoProvidejQuery()
 ;
 
-module.exports = Encore.getWebpackConfig();
+// var config = Encore.getWebpackConfig();
+// config.externals.jquery = 'jQuery';
+// module.exports = config;
+
+module.exports = Encore.addExternals({
+    jquery: 'jQuery'
+}).getWebpackConfig();
+

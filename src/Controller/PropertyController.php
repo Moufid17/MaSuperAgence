@@ -48,10 +48,13 @@ class PropertyController extends AbstractController{
             12
         );
 
+        $filter->setArrayResultSize($this->repository->findAllVisibleQuery($filter)->getResult());
+
         return $this->render('/property/index.html.twig',[
             'current_menu' => 'properties',
             'properties' => $filters_properties,
             'form' => $form->createView(),
+            'size_result' => $filter->getArrayResultSize(),
         ]);
     }
 

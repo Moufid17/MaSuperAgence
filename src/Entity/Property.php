@@ -351,7 +351,7 @@ class Property
         return $this;
     }
 
-    public function setFilename(string $filename): void
+    public function setFilename(?string $filename): void
     {
         $this->filename = $filename;
     }
