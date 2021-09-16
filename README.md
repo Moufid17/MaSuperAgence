@@ -1,6 +1,6 @@
 # MaSuperAgence
 # Link : http://agency-real-estate.herokuapp.com/
-# Description :My first step with symfony in his version 4. "MaSuperAgence" nicknamed "agency-real-estate" is a web application project made to:
+Description :My first step with symfony in his version 4. "MaSuperAgence" nicknamed "agency-real-estate" is a web application project made to:
 
   1) visualize all estate are available ;
   2) filter by your own features;
